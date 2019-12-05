@@ -86,7 +86,8 @@ class HelloComponent(base_component.BaseComponent):
     if not output_data:
       examples_artifact = standard_artifacts.Examples()
       examples_artifact.split_names = artifact_utils.encode_split_names(
-          [artifact.split for artifact in input_data.outputs['examples'].get()])
+          [artifact.split for artifact in
+           input_data.artifacts['examples'].get()])
       output_data = channel_utils.as_channel([examples_artifact])
 
     spec = HelloComponentSpec(input_data=input_data,

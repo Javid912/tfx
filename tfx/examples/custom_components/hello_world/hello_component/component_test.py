@@ -20,6 +20,7 @@ from __future__ import print_function
 
 from hello_component import component
 import tensorflow as tf
+from tfx.types import artifact_utils
 from tfx.types import channel_utils
 from tfx.types import standard_artifacts
 
@@ -31,15 +32,15 @@ class HelloComponentTest(tf.test.TestCase):
     self.name = 'HelloWorld'
 
   def testConstruct(self):
-    train_examples_in = standard_artifacts.Examples(split='train')
-    eval_examples_in = standard_artifacts.Examples(split='eval')
-    train_examples_out = standard_artifacts.Examples(split='train')
-    eval_examples_out = standard_artifacts.Examples(split='eval')
+    input_data = standard_artifacts.Examples()
+    input_data.split_names = artifact_utils.encode_split_names(
+        ['train', 'eval'])
+    output_data = standard_artifacts.Examples()
+    output_data.split_names = artifact_utils.encode_split_names(
+        ['train', 'eval'])
     this_component = component.HelloComponent(
-        input_data=channel_utils.as_channel(
-            [train_examples_in, eval_examples_in]),
-        output_data=channel_utils.as_channel(
-            [train_examples_out, eval_examples_out]),
+        input_data=channel_utils.as_channel([input_data]),
+        output_data=channel_utils.as_channel([output_data]),
         name=u'Testing123')
     self.assertEqual(standard_artifacts.Examples.TYPE_NAME,
                      this_component.outputs['output_data'].type_name)
